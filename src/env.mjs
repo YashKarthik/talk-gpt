@@ -6,6 +6,9 @@ import { z } from "zod";
  */
 const server = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
+  OPENAI_API_KEY: z.string(),
+  UPSTASH_URL: z.string().url(),
+  UPSTASH_TOKEN: z.string(),
 });
 
 /**
@@ -24,6 +27,9 @@ const client = z.object({
  */
 const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  UPSTASH_URL: process.env.UPSTASH_URL,
+  UPSTASH_TOKEN: process.env.UPSTASH_TOKEN,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

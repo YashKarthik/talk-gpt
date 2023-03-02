@@ -1,28 +1,34 @@
-# Create T3 App
+# Talk-GPT
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+ChatGPT + Whisper + Text-to-speech.
 
-## What's next? How do I make an app with this?
+- New user lands on webpage, sends their first req.
+- First req is sent to ChatGPT.
+- Generate a random token, serves as conversation id.
+- Send the returned content and the ID to UI (store ID in state) and store the req, res in redis, where conv ID is the key.
+- User sends next request, this time along with the conv ID. We get the prev reqs, res from redis based on ID and send the entire arary to OpenAI.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Store conversation thread in redis.
+- Redis json schema:
+key: [
+ {"role": "system", "content": "You are a helpful assistant."},
+ {"role": "user", "content": "What's the capital of India?"},
+ {"role": "assistant", "content": "New Delhi."},
+]
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- API response:
+Request:
+data: '{"model":"gpt-3.5-turbo","messages":[{"role":"system","content":"You are a helpful assistant."},{"role":"user","content":"hello world"}]}',
+url: 'https://api.openai.com/v1/chat/completions'
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Response:
+data: {
+  id: 'chatcmpl-6pV2lNkUAYEwb5gg6szaA9bGews9K',
+  object: 'chat.completion',
+  created: 1677732079,
+  model: 'gpt-3.5-turbo-0301',
+  usage: { prompt_tokens: 20, completion_tokens: 12, total_tokens: 32 },
+  choices: [ [Object] ]
+}
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+###### This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
